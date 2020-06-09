@@ -27,17 +27,40 @@ public class Main3Activity extends AppCompatActivity {
      */
     private static final String FILENAME = "Main3Activity.java";
     private static final String TAG = "Whack-A-Mole3.0!";
-
+    private Button btoLogin;
+    String userName;
+    MyDBHandler dbHandler = new MyDBHandler(this,null,null,1);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
+        btoLogin = findViewById(R.id.btnBtoLogin);
+        Intent intentreceive = getIntent();
+
+        userName = intentreceive.getStringExtra("Username");
+        Log.v(TAG, FILENAME + ": Show level for User: "+ userName);
+        UserData userData = dbHandler.findUser(userName);
+        dbHandler.findUser(userName);
+        RecyclerView recyclerView = findViewById(R.id.recycleViewScore);
+        CustomScoreAdaptor mAdapter = new CustomScoreAdaptor(userData,getApplicationContext());
+
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
         /* Hint:
         This method receives the username account data and looks up the database for find the
         corresponding information to display in the recyclerView for the level selections page.
-
         Log.v(TAG, FILENAME + ": Show level for User: "+ userName);
+
          */
+        btoLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Main3Activity.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
